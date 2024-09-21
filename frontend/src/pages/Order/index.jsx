@@ -1,15 +1,32 @@
+import { useEffect, useState } from "react";
 import { TableOrder } from "../../components/Table";
+import Api from "../../components/axios/api";
+import { ContainerOrder, ContanetOrder } from "./style";
+import { Sidebar } from "../../components/Sidebar";
 
 export const Order = () => {
-    const orders = [
-        {id:1, user: "Dan", order: "Filé", value: 25.4, status: "Disponível" },
-        {id:2, user: "Naum", order: "Salada", value: 15.0, status: "Aguardando" },
-        {id:3, user: "Luiz", order: "Pizza", value: 40.9, status: "Entregue" },
-        {id:4, user: "Weslaine", order: "Pizza", value: 40.9, status: "Entregue" }
+    const [orders, setOrders] = useState([]);
+    
+    useEffect(() => {
+        const handleFetch = async () => {
+            try {
+                const response = await Api.get("/orders")
 
-    ];
+                setOrders(response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        handleFetch();
+    },[]);
+
 
     return (
-        <TableOrder items={orders} />
+        <ContainerOrder>
+                <Sidebar/>
+                <ContanetOrder>
+                    <TableOrder items={orders} />
+                </ContanetOrder>
+        </ContainerOrder>
     );
 }

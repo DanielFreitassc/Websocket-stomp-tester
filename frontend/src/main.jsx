@@ -4,7 +4,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { GlobalStyles } from './styles/global'
-import { TableOrder } from './components/Table'
+import { Order } from './pages/Order'
 
 const router = createBrowserRouter([
   {
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path:"/order",
-    element:<TableOrder/>
+    element:<Order/>
   }
 ])
 

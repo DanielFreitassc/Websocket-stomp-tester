@@ -1,6 +1,6 @@
 import { AvailableContainer, CardContainer, CardMap, ImgContainer, NameContainer, PriceContainer } from "./style"
 
-export const Card = ({products}) => {
+export const Card = ({products = []}) => {
     return(
         
         <CardContainer>
