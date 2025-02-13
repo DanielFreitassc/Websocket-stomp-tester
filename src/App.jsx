@@ -3,7 +3,7 @@ import { Stomp } from "@stomp/stompjs";
 import { useState } from "react";
 import AceEditor from 'react-ace';
 import 'brace/mode/json';
-import 'brace/theme/github'; // ou outro tema de sua escolha
+import 'brace/theme/github'; 
 
 export const App = () => {
   const [stompClient, setStompClient] = useState(null);
@@ -11,7 +11,7 @@ export const App = () => {
   const [messages, setMessages] = useState([]);
   const [url, setUrl] = useState('ws://localhost:8080/addEndpoint');
   const [sendDestination, setSendDestination] = useState('');
-  const [sendMessage, setSendMessage] = useState('{"a": 1, "b": "example"}'); // Começa com um JSON básico
+  const [sendMessage, setSendMessage] = useState('{"a": 1, "b": "example"}');
   const [subscribeDestination, setSubscribeDestination] = useState('');
   const [subscriptions, setSubscriptions] = useState([]);
 
