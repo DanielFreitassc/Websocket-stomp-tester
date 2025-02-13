@@ -31,6 +31,8 @@ export const App = () => {
     client.onDisconnect = () => {
       console.log('Desconectado do WebSocket.');
       setConnected(false);
+      setSubscriptions([]);
+      setMessages([]);
     };
 
     client.onStompError = (frame) => {
@@ -47,20 +49,39 @@ export const App = () => {
     setStompClient(client);
   };
 
+  const handleDisconnect = () => {
+    if (stompClient) {
+      stompClient.deactivate();
+      setConnected(false);
+      setSubscriptions([]);
+      setMessages([]);
+      console.log('Desconectado do WebSocket.');
+    }
+  };
+
   const handleSubscribe = () => {
     if (stompClient && subscribeDestination) {
-      stompClient.subscribe(subscribeDestination, message => {
+      const subscription = stompClient.subscribe(subscribeDestination, message => {
         setMessages(prevMessages => [...prevMessages, message.body]);
       });
-      setSubscriptions(prev => [...prev, subscribeDestination]);
+      setSubscriptions(prev => [...prev, { destination: subscribeDestination, subscription }]);
       console.log(`Inscrito no tópico: ${subscribeDestination}`);
+    }
+  };
+
+  const handleUnsubscribe = (destination) => {
+    const sub = subscriptions.find(sub => sub.destination === destination);
+    if (sub && sub.subscription) {
+      sub.subscription.unsubscribe();
+      setSubscriptions(prev => prev.filter(s => s.destination !== destination));
+      console.log(`Desinscrito do tópico: ${destination}`);
     }
   };
 
   const handleSendMessage = () => {
     try {
       const parsedMessage = JSON.parse(sendMessage);
-      if (stompClient && sendDestination && sendMessage) {
+      if (stompClient && sendDestination && sendMessage && subscriptions.length > 0) {
         stompClient.publish({
           destination: sendDestination,
           body: JSON.stringify(parsedMessage), 
@@ -88,6 +109,32 @@ export const App = () => {
         <Button onClick={handleConnect} disabled={connected}>
           {connected ? 'Conectado' : 'Conectar'}
         </Button>
+        <Button onClick={handleDisconnect} disabled={!connected}>
+          Desconectar
+        </Button>
+      </Section>
+
+      <Section>
+        <Heading>Inscrever em Tópico</Heading>
+        <Input
+          type="text"
+          placeholder="Tópico (ex: /enableSimpleBroker/example-topic)"
+          value={subscribeDestination}
+          onChange={(e) => setSubscribeDestination(e.target.value)}
+          disabled={!connected}
+        />
+        <Button onClick={handleSubscribe} disabled={!connected || subscriptions.some(sub => sub.destination === subscribeDestination)}>
+          {subscriptions.some(sub => sub.destination === subscribeDestination) ? 'Inscrito' : 'Inscrever'}
+        </Button>
+
+        <MessageList>
+          {subscriptions.map((sub, index) => (
+            <MessageItem key={index}>
+              Inscrito em: {sub.destination}
+              <Button onClick={() => handleUnsubscribe(sub.destination)}>Desinscrever</Button>
+            </MessageItem>
+          ))}
+        </MessageList>
       </Section>
 
       <Section>
@@ -97,7 +144,7 @@ export const App = () => {
           placeholder="Destino (ex: /setApplicationDestinationPrefixes/@MessageMapping())"
           value={sendDestination}
           onChange={(e) => setSendDestination(e.target.value)}
-          disabled={!connected}
+          disabled={!connected || subscriptions.length === 0}
         />
         <AceEditor
           mode="json"
@@ -115,29 +162,9 @@ export const App = () => {
           }}
           style={{ fontSize: '1rem' }}
         />
-        <Button onClick={handleSendMessage} disabled={!connected}>
+        <Button onClick={handleSendMessage} disabled={!connected || subscriptions.length === 0}>
           Enviar
         </Button>
-      </Section>
-
-      <Section>
-        <Heading>Inscrever em Tópico</Heading>
-        <Input
-          type="text"
-          placeholder="Tópico (ex: /enableSimpleBroker/example-topic)"
-          value={subscribeDestination}
-          onChange={(e) => setSubscribeDestination(e.target.value)}
-          disabled={!connected}
-        />
-        <Button onClick={handleSubscribe} disabled={!connected || subscriptions.includes(subscribeDestination)}>
-          {subscriptions.includes(subscribeDestination) ? 'Inscrito' : 'Inscrever'}
-        </Button>
-
-        <MessageList>
-          {subscriptions.map((topic, index) => (
-            <MessageItem key={index}>Inscrito em: {topic}</MessageItem>
-          ))}
-        </MessageList>
       </Section>
 
       <Section>
