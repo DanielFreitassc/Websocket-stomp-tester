@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Input, MessageItem, MessageList, Section } from "./style";
+import { Button, Container, Heading, Input, MessageItem, MessageList, Section, TitleApiTester } from "./style";
 import { Stomp } from "@stomp/stompjs";
 import { useState } from "react";
 import AceEditor from 'react-ace';
@@ -96,7 +96,7 @@ export const App = () => {
 
   return (
     <Container>
-      <h1>STOMP WebSocket Client</h1>
+      <TitleApiTester>STOMP WebSocket Client</TitleApiTester>
 
       <Section>
         <Input

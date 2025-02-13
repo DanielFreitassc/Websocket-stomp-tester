@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+export const TitleApiTester = styled.h1`
+  text-align: center;
+  margin: 20px;
+`
+
 export const Container = styled.div`
   font-family: 'Fira Code', monospace;
   background-color: #1e1e1e;
