@@ -1,7 +1,3 @@
-Entendi! Vamos atualizar a documentação para refletir que a pessoa precisa se inscrever em um tópico antes de poder enviar uma mensagem. Aqui está a versão atualizada:
-
----
-
 # Websocket-Stomp-Tester 🚀
 
 ## Visão Geral 📋
