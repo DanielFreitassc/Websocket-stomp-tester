@@ -97,4 +97,3 @@ O **Websocket-Stomp-Tester** é uma aplicação de cliente WebSocket construída
 - A formatação do JSON deve ser válida. Utilize o editor para garantir que a sintaxe está correta.
 - **Lembre-se**: para enviar uma mensagem, é necessário estar inscrito em pelo menos um tópico.
 
-
